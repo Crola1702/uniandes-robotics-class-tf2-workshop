@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  moveit2:
+    build: .
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth
+    environment:
+      - XAUTHORITY=/tmp/.docker.xauth
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+    command:
+      [
+        "ros2",
+        "launch",
+        "moveit2_tutorials",
+        "demo.launch.py",
+        "rviz_tutorial:=true"
+      ]

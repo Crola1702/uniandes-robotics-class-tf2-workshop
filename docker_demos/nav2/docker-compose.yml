@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nav2:
+    build: .
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth
+    environment:
+      - XAUTHORITY=/tmp/.docker.xauth
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+    command: /bin/bash -c \
+              "export TURTLEBOT3_MODEL=waffle \
+              && ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False"
