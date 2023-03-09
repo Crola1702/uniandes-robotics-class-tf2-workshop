@@ -16,3 +16,11 @@ To run them, just open a new terminal and run the `setup.sh` script:
 # Run nav2 docker demo
 cd docker/nav2 && ./setup.sh
 ```
+
+## tf2 workshop
+
+You need to complete `TODO`s from `turtle_tf2_ws` workspace files:
+* **`turtle_tf2_broadcaster.py`**
+* **`turtle_tf2_listener.py`**
+
+Check [readme Guide](turtle_tf2_ws/README.md)
