@@ -22,13 +22,14 @@ class TurtleFrameListener(Node):
 
         # TODO: Initialize the transform listener calling `TransformListener` on this Node
         self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, ...)
+        self.tf_listener = TransformListener(self.tf_buffer, self) # buffer, node
         
-
         # TODO: Create turtle2 velocity publisher
         # Use `geometry_msgs/Twist` as msg type and `turtle2/cmd_vel` as topic name
-        self.publisher = ...
-        
+        self.publisher = self.create_publisher(
+            Twist, 
+            'turtle2/cmd_vel', 
+            10)
 
         # Create a client to spawn a turtle
         self.spawner = self.create_client(Spawn, 'spawn')
@@ -49,7 +50,9 @@ class TurtleFrameListener(Node):
 
 
         # TODO: Create a timer that will call `self.on_timer` with a period of 1 second
-        self.timer = ...
+        self.timer = self.create_timer(
+            1.0, 
+            self.on_timer)
         
 
     def on_timer(self):
@@ -75,20 +78,23 @@ class TurtleFrameListener(Node):
         # TODO: Fill the angle difference between turtle2 postion and target_frame position
         # Use math.atan2 and translation x and y of the lookup transform
         rotation_rate = 1.0
-        angle_diff = ...
+        angle_diff = math.atan2(
+            t.transform.translation.y, 
+            t.transform.translation.x)
         
         msg.angular.z = rotation_rate * angle_diff
 
         # TODO: Fill the distance difference between turtle2 and target_frame
         # Use math.sqrt and translation x and y of the lookup transform
         forward_speed = 0.5
-        distance_diff = ...
+        distance_diff = math.sqrt(
+            t.transform.translation.x ** 2 +
+            t.transform.translation.y ** 2)
         
         msg.linear.x = forward_speed * distance_diff
 
         # TODO: Publish the message
-        ...
-        
+        self.publisher.publish(msg)
 
 
 def main():
